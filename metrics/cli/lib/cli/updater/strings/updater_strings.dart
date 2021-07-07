@@ -9,9 +9,6 @@ class UpdateStrings {
 The updating has failed due to the following error:
 $error''';
 
-  static const String deletingTempDirectory =
-      'Deleting the temporary Metrics directory. This may take a while...';
-
   static const String successfulUpdating =
       'The updating has finished successfully!';
 }

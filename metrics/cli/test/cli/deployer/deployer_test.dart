@@ -3,14 +3,15 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/deployer.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
+import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';
 import 'package:cli/common/model/config/web_metrics_config.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:mockito/mockito.dart';
@@ -25,9 +26,9 @@ import '../../test_utils/gcloud_service_mock.dart';
 import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
 import '../../test_utils/npm_service_mock.dart';
+import '../../test_utils/path_factory_mock.dart';
 import '../../test_utils/prompter_mock.dart';
 import '../../test_utils/sentry_service_mock.dart';
-import '../../test_utils/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values, avoid_implementing_value_types, must_be_immutable
 
@@ -52,8 +53,7 @@ void main() {
     final fileHelper = FileHelperMock();
     final prompter = PrompterMock();
     final directory = DirectoryMock();
-    final servicesMock = ServicesMock();
-    final pathsFactoryMock = _PathsFactoryMock();
+    final pathsFactoryMock = PathsFactoryMock();
     final pathsFactory = PathsFactory();
     final paths = Paths(tempDirectoryPath);
     final sentryProject = SentryProject(
@@ -140,7 +140,6 @@ void main() {
       reset(sentryService);
       reset(fileHelper);
       reset(directory);
-      reset(servicesMock);
       reset(prompter);
       reset(file);
       reset(pathsFactoryMock);
@@ -152,138 +151,6 @@ void main() {
         expect(
           () => Deployer(
             services: null,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Flutter service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(null);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the GCloud service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(null);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Npm service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(null);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Git service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(null);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Firebase service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(null);
-        when(servicesMock.sentryService).thenReturn(sentryService);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
-            fileHelper: fileHelper,
-            prompter: prompter,
-            pathsFactory: pathsFactory,
-          ),
-          throwsArgumentError,
-        );
-      },
-    );
-
-    test(
-      "throws an ArgumentError if the Sentry service in the given services is null",
-      () {
-        when(servicesMock.flutterService).thenReturn(flutterService);
-        when(servicesMock.gcloudService).thenReturn(gcloudService);
-        when(servicesMock.npmService).thenReturn(npmService);
-        when(servicesMock.gitService).thenReturn(gitService);
-        when(servicesMock.firebaseService).thenReturn(firebaseService);
-        when(servicesMock.sentryService).thenReturn(null);
-
-        expect(
-          () => Deployer(
-            services: servicesMock,
             fileHelper: fileHelper,
             prompter: prompter,
             pathsFactory: pathsFactory,
@@ -2662,7 +2529,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(prompter.info(DeployStrings.deletingTempDirectory)).called(once);
+        verify(prompter.info(CommonStrings.deletingTempDirectory)).called(once);
       },
     );
 
@@ -2691,5 +2558,3 @@ void main() {
     );
   });
 }
-
-class _PathsFactoryMock extends Mock implements PathsFactory {}

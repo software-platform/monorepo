@@ -3,13 +3,14 @@
 
 import 'dart:io';
 
-import 'package:cli/cli/deployer/constants/deploy_constants.dart';
 import 'package:cli/cli/deployer/strings/deploy_strings.dart';
+import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';
 import 'package:cli/common/model/config/web_metrics_config.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/prompter/prompter.dart';
 import 'package:cli/services/firebase/firebase_service.dart';
 import 'package:cli/services/flutter/flutter_service.dart';
@@ -53,12 +54,6 @@ class Deployer {
   /// Creates a new instance of the [Deployer] with the given services.
   ///
   /// Throws an [ArgumentError] if the given [services] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.flutterService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.gcloudService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.npmService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.gitService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.firebaseService] is `null`.
-  /// Throws an [ArgumentError] if the given [Services.sentryService] is `null`.
   /// Throws an [ArgumentError] if the given [fileHelper] is `null`.
   /// Throws an [ArgumentError] if the given [prompter] is `null`.
   /// Throws an [ArgumentError] if the given [pathsFactory] is `null`.
@@ -77,12 +72,6 @@ class Deployer {
         _prompter = prompter,
         _pathsFactory = pathsFactory {
     ArgumentError.checkNotNull(services, 'services');
-    ArgumentError.checkNotNull(_flutterService, 'flutterService');
-    ArgumentError.checkNotNull(_gcloudService, 'gcloudService');
-    ArgumentError.checkNotNull(_npmService, 'npmService');
-    ArgumentError.checkNotNull(_gitService, 'gitService');
-    ArgumentError.checkNotNull(_firebaseService, 'firebaseService');
-    ArgumentError.checkNotNull(_sentryService, 'sentryService');
     ArgumentError.checkNotNull(_fileHelper, 'fileHelper');
     ArgumentError.checkNotNull(_prompter, 'prompter');
     ArgumentError.checkNotNull(_pathsFactory, 'pathsFactory');
@@ -110,6 +99,7 @@ class Deployer {
         paths.firebasePath,
         paths.firebaseFunctionsPath,
       );
+
       await _flutterService.build(paths.webAppPath);
       await _firebaseService.upgradeBillingPlan(projectId);
       await _firebaseService.enableAnalytics(projectId);
@@ -147,7 +137,7 @@ class Deployer {
         _prompter.info(DeployStrings.successfulDeployment);
       }
 
-      _prompter.info(DeployStrings.deletingTempDirectory);
+      _prompter.info(CommonStrings.deletingTempDirectory);
       _deleteDirectory(tempDirectory);
     }
   }

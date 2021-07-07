@@ -32,6 +32,7 @@ class FileHelper {
     File file,
     Map<String, dynamic> environment,
   ) {
+    print(file);
     ArgumentError.checkNotNull(file, 'file');
     ArgumentError.checkNotNull(environment, 'environment');
 
