@@ -7,4 +7,7 @@
 class CommonStrings {
   static String executionWentWrong(String executable) =>
       'Something went wrong while executing the $executable command.';
+
+  static const String deletingTempDirectory =
+      'Deleting the temporary Metrics directory. This may take a while...';
 }

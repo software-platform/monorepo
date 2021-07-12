@@ -1,8 +1,10 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:equatable/equatable.dart';
+
 /// A class that holds common paths based on the current root directory path.
-class Paths {
+class Paths extends Equatable {
   /// A path to the root directory.
   final String rootPath;
 
@@ -27,4 +29,7 @@ class Paths {
 
   /// A path to the Metrics configuration file.
   String get metricsConfigPath => '$webAppPath/build/web/metrics_config.js';
+
+  @override
+  List<Object> get props => [rootPath];
 }

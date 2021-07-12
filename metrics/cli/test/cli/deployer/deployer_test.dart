@@ -11,6 +11,7 @@ import 'package:cli/common/model/config/web_metrics_config.dart';
 import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:mockito/mockito.dart';
@@ -2662,7 +2663,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(prompter.info(DeployStrings.deletingTempDirectory)).called(once);
+        verify(prompter.info(CommonStrings.deletingTempDirectory)).called(once);
       },
     );
 

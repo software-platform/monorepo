@@ -8,9 +8,6 @@ class DeployStrings {
   static const String setupSentry =
       'Would you like to set up a Sentry for the Metrics project?(y/n): ';
 
-  static const String deletingTempDirectory =
-      'Deleting the temporary Metrics directory. This may take a while...';
-
   static String failedDeployment(Object error) => '''
 The deployment has failed due to the following error:
 $error''';
