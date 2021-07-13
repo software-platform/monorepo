@@ -7,6 +7,7 @@ import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
 import 'package:metrics/common/presentation/navigation/metrics_router_delegate.dart';
 import 'package:metrics/common/presentation/navigation/models/factory/page_parameters_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/navigation/state/navigation_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -151,7 +152,9 @@ void main() {
       "applies a list of pages from the given navigation notifier to the navigator widget",
       () {
         final expectedPages = UnmodifiableListView(
-          const [MetricsPage(child: Text('test'))],
+          const [
+            MetricsPage(child: Text('test'), routeName: RouteName.dashboard),
+          ],
         );
         when(navigationNotifierMock.pages).thenReturn(expectedPages);
 
