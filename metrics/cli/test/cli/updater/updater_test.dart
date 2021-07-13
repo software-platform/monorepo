@@ -4,11 +4,13 @@
 import 'dart:io';
 
 import 'package:cli/cli/updater/model/update_algorithm.dart';
+import 'package:cli/cli/updater/strings/update_strings.dart';
 import 'package:cli/cli/updater/updater.dart';
 import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/update_config.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
 import 'package:cli/common/model/paths/paths.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -24,6 +26,7 @@ void main() {
     const tempDirectoryPath = 'tempDirectoryPath';
     const prefix = DeployConstants.tempDirectoryPrefix;
 
+    final stateError = StateError('stateError');
     final paths = Paths(tempDirectoryPath);
     final updateAlgorithm = _UpdateAlgorithmMock();
     final fileHelper = FileHelperMock();
@@ -177,13 +180,123 @@ void main() {
     );
 
     test(
-      ".deploy() creates the GCloud project",
+      ".update() creates a Paths instance before starting the update algorithm",
+      () async {
+        final updater = Updater(
+          updateAlgorithm: updateAlgorithm,
+          fileHelper: fileHelper,
+          pathsFactory: pathsFactoryMock,
+          prompter: prompter,
+        );
+
+        whenDirectoryExist().thenReturn(true);
+        when(pathsFactoryMock.create(tempDirectoryPath)).thenReturn(paths);
+
+        await updater.update(config);
+
+        verifyInOrder([
+          pathsFactoryMock.create(tempDirectoryPath),
+          updateAlgorithm.start(config, paths),
+        ]);
+      },
+    );
+
+    test(
+      ".update() starts the update algorithm",
       () async {
         whenDirectoryExist().thenReturn(true);
 
         await updater.update(config);
 
         verify(updateAlgorithm.start(config, paths)).called(once);
+      },
+    );
+
+    test(
+      ".update() informs the user about the failed updating if the update algorithm throws",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(updateAlgorithm.start(config, paths)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await updater.update(config);
+
+        verify(prompter.error(
+          UpdateStrings.failedUpdating(stateError),
+        )).called(once);
+      },
+    );
+
+    test(
+      ".update() informs about deleting the temporary directory if the update algorithm throws",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(updateAlgorithm.start(config, paths)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await updater.update(config);
+
+        verify(prompter.info(CommonStrings.deletingTempDirectory)).called(once);
+      },
+    );
+
+    test(
+      ".update() deletes the temporary directory if the update algorithm throws",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+        when(updateAlgorithm.start(config, paths)).thenAnswer(
+          (_) => Future.error(stateError),
+        );
+
+        await updater.update(config);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".update() deletes the temporary directory if it exists",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await updater.update(config);
+
+        verify(directory.deleteSync(recursive: true)).called(once);
+      },
+    );
+
+    test(
+      ".update() does not delete the temporary directory if it does not exist",
+      () async {
+        whenDirectoryExist().thenReturn(false);
+
+        await updater.update(config);
+
+        verifyNever(directory.deleteSync(recursive: true));
+      },
+    );
+
+    test(
+      ".update() informs about deleting the temporary directory",
+      () async {
+        whenDirectoryExist().thenReturn(true);
+
+        await updater.update(config);
+
+        verify(prompter.info(CommonStrings.deletingTempDirectory)).called(once);
+      },
+    );
+
+    test(
+      ".update() informs about the successful deployment if deployment succeeds",
+      () async {
+        whenDirectoryExist().thenReturn(false);
+
+        await updater.update(config);
+
+        verify(prompter.info(UpdateStrings.successfulUpdating)).called(once);
       },
     );
   });
