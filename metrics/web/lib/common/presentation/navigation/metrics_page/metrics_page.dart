@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_route.dart';
-import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 
 /// A class that represents a Metrics application page.
@@ -34,7 +33,7 @@ class MetricsPage<T> extends Page<T> {
     this.fullscreenDialog = false,
     LocalKey key,
     String name,
-    PageParametersModel arguments,
+    Object arguments,
   })  : assert(child != null),
         assert(routeName != null),
         assert(maintainState != null),
@@ -67,15 +66,11 @@ class MetricsPage<T> extends Page<T> {
 
   @override
   MetricsPage<T> copyWith({String name, Object arguments}) {
-    if (arguments is PageParametersModel) {
-      return MetricsPage(
-        name: name,
-        child: child,
-        routeName: routeName,
-        arguments: arguments,
-      );
-    }
-
-    return this;
+    return MetricsPage(
+      name: name ?? this.name,
+      child: child,
+      routeName: routeName,
+      arguments: arguments ?? this.arguments,
+    );
   }
 }

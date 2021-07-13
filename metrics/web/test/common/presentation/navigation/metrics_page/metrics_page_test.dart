@@ -123,23 +123,6 @@ void main() {
     );
 
     test(
-      ".copyWith() returns the same metrics page if the given arguments is not an instance of the page parameters model",
-      () {
-        const metricsPage = MetricsPage(
-          child: child,
-          routeName: routeName,
-          arguments: arguments,
-        );
-
-        final updatedPage = metricsPage.copyWith(arguments: null);
-
-        expect(metricsPage.child, equals(updatedPage.child));
-        expect(metricsPage.arguments, equals(updatedPage.arguments));
-        expect(metricsPage.routeName, equals(updatedPage.routeName));
-      },
-    );
-
-    test(
       ".copyWith() returns the same metrics page if called without params",
       () {
         const metricsPage = MetricsPage(
