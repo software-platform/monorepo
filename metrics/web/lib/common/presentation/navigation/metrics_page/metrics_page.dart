@@ -67,6 +67,7 @@ class MetricsPage<T> extends Page<T> {
   @override
   MetricsPage<T> copyWith({String name, Object arguments}) {
     return MetricsPage(
+      name: name ?? this.name,
       child: child,
       routeName: routeName,
       arguments: arguments ?? this.arguments,
