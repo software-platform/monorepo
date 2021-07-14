@@ -6,14 +6,14 @@ import 'package:cli/common/model/services/services.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/firebase_service_mock.dart';
-import '../../test_utils/flutter_service_mock.dart';
-import '../../test_utils/gcloud_service_mock.dart';
-import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
-import '../../test_utils/npm_service_mock.dart';
-import '../../test_utils/sentry_service_mock.dart';
-import '../../test_utils/services_mock.dart';
+import '../../test_utils/mock/firebase_service_mock.dart';
+import '../../test_utils/mock/flutter_service_mock.dart';
+import '../../test_utils/mock/gcloud_service_mock.dart';
+import '../../test_utils/mock/git_service_mock.dart';
+import '../../test_utils/mock/npm_service_mock.dart';
+import '../../test_utils/mock/sentry_service_mock.dart';
+import '../../test_utils/mock/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

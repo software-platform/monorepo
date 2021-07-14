@@ -9,9 +9,9 @@ import 'package:cli/common/model/config/update_config.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../../../test_utils/file_helper_mock.dart';
-import '../../../../test_utils/file_mock.dart';
 import '../../../../test_utils/matchers.dart';
+import '../../../../test_utils/mock/file_helper_mock.dart';
+import '../../../../test_utils/mock/file_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values
 

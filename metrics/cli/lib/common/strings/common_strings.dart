@@ -5,6 +5,9 @@
 
 /// A class that holds the common strings.
 class CommonStrings {
+  static const String deletingTempDirectory =
+      'Deleting the temporary Metrics directory. This may take a while...';
+
   static String executionWentWrong(String executable) =>
       'Something went wrong while executing the $executable command.';
 }

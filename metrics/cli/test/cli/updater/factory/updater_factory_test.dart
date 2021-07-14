@@ -1,8 +1,8 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-import 'package:cli/cli/deployer/deployer.dart';
-import 'package:cli/cli/deployer/factory/deployer_factory.dart';
+import 'package:cli/cli/updater/factory/updater_factory.dart';
+import 'package:cli/cli/updater/updater.dart';
 import 'package:cli/common/model/services/services.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -17,9 +17,9 @@ import '../../../test_utils/mock/sentry_service_mock.dart';
 import '../../../test_utils/mock/services_factory_mock.dart';
 
 void main() {
-  group("DeployerFactory", () {
+  group("UpdaterFactory", () {
     final servicesFactory = ServicesFactoryMock();
-    final deployerFactory = DeployerFactory(servicesFactory);
+    final updaterFactory = UpdaterFactory(servicesFactory);
     final gcloudService = GCloudServiceMock();
     final flutterService = FlutterServiceMock();
     final gitService = GitServiceMock();
@@ -53,7 +53,7 @@ void main() {
       "throws an ArgumentError if the given services factory is null",
       () {
         expect(
-          () => DeployerFactory(null),
+          () => UpdaterFactory(null),
           throwsArgumentError,
         );
       },
@@ -64,20 +64,20 @@ void main() {
       () {
         whenCreateServices().thenReturn(services);
 
-        deployerFactory.create();
+        updaterFactory.create();
 
         verify(servicesFactory.create()).called(once);
       },
     );
 
     test(
-      ".create() successfully creates a Deployer instance",
+      ".create() successfully creates an Updater instance",
       () {
         whenCreateServices().thenReturn(services);
 
-        final deployer = deployerFactory.create();
+        final updater = updaterFactory.create();
 
-        expect(deployer, isA<Deployer>());
+        expect(updater, isA<Updater>());
       },
     );
   });

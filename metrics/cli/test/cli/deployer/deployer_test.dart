@@ -8,26 +8,28 @@ import 'package:cli/cli/deployer/strings/deploy_strings.dart';
 import 'package:cli/common/constants/deploy_constants.dart';
 import 'package:cli/common/model/config/sentry_web_config.dart';
 import 'package:cli/common/model/config/web_metrics_config.dart';
-import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/paths/factory/paths_factory.dart';
+import 'package:cli/common/model/paths/paths.dart';
 import 'package:cli/common/model/services/services.dart';
+import 'package:cli/common/strings/common_strings.dart';
 import 'package:cli/services/sentry/model/sentry_project.dart';
 import 'package:cli/services/sentry/model/sentry_release.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../../test_utils/directory_mock.dart';
-import '../../test_utils/file_helper_mock.dart';
-import '../../test_utils/file_mock.dart';
-import '../../test_utils/firebase_service_mock.dart';
-import '../../test_utils/flutter_service_mock.dart';
-import '../../test_utils/gcloud_service_mock.dart';
-import '../../test_utils/git_service_mock.dart';
 import '../../test_utils/matchers.dart';
-import '../../test_utils/npm_service_mock.dart';
-import '../../test_utils/prompter_mock.dart';
-import '../../test_utils/sentry_service_mock.dart';
-import '../../test_utils/services_mock.dart';
+import '../../test_utils/mock/directory_mock.dart';
+import '../../test_utils/mock/file_helper_mock.dart';
+import '../../test_utils/mock/file_mock.dart';
+import '../../test_utils/mock/firebase_service_mock.dart';
+import '../../test_utils/mock/flutter_service_mock.dart';
+import '../../test_utils/mock/gcloud_service_mock.dart';
+import '../../test_utils/mock/git_service_mock.dart';
+import '../../test_utils/mock/npm_service_mock.dart';
+import '../../test_utils/mock/path_factory_mock.dart';
+import '../../test_utils/mock/prompter_mock.dart';
+import '../../test_utils/mock/sentry_service_mock.dart';
+import '../../test_utils/mock/services_mock.dart';
 
 // ignore_for_file: avoid_redundant_argument_values, avoid_implementing_value_types, must_be_immutable
 
@@ -53,7 +55,7 @@ void main() {
     final prompter = PrompterMock();
     final directory = DirectoryMock();
     final servicesMock = ServicesMock();
-    final pathsFactoryMock = _PathsFactoryMock();
+    final pathsFactoryMock = PathsFactoryMock();
     final pathsFactory = PathsFactory();
     final paths = Paths(tempDirectoryPath);
     final sentryProject = SentryProject(
@@ -2662,7 +2664,7 @@ void main() {
 
         await deployer.deploy();
 
-        verify(prompter.info(DeployStrings.deletingTempDirectory)).called(once);
+        verify(prompter.info(CommonStrings.deletingTempDirectory)).called(once);
       },
     );
 
@@ -2691,5 +2693,3 @@ void main() {
     );
   });
 }
-
-class _PathsFactoryMock extends Mock implements PathsFactory {}

@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../test_utils/matchers.dart';
-import '../test_utils/prompt_writer_mock.dart';
+import '../test_utils/mock/prompt_writer_mock.dart';
 
 void main() {
   group("Prompter", () {
