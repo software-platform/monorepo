@@ -301,13 +301,15 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+        notifier.push(DefaultRoutes.projectGroups);
+
         final currentConfiguration = notifier.currentConfiguration;
 
-        notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
         verify(pageParametersFactory.create(currentConfiguration))
-            .called(equals(2));
+            .called(once);
       },
     );
 
@@ -407,6 +409,24 @@ void main() {
         notifier.push(routeConfiguration);
 
         verify(pageParametersFactory.create(any)).called(once);
+      },
+    );
+
+    test(
+      ".push() uses the given metrics page factory with correct parameters to create a metrics page",
+      () {
+        final pageFactory = _MetricsPageFactoryMock();
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.push(routeConfiguration);
+
+        verify(pageFactory.create(routeConfiguration.name, null)).called(once);
       },
     );
 
@@ -934,6 +954,24 @@ void main() {
     );
 
     test(
+      ".handleInitialRoutePath() uses the given metrics page factory with correct parameters to create a metrics page",
+      () {
+        final pageFactory = _MetricsPageFactoryMock();
+        final notifier = NavigationNotifier(
+          pageFactory,
+          pageParametersFactory,
+          navigationState,
+        );
+        notifier.handleAppInitialized(isAppInitialized: true);
+        notifier.handleAuthenticationUpdates(isLoggedIn: true);
+
+        notifier.handleInitialRoutePath(routeConfiguration);
+
+        verify(pageFactory.create(routeConfiguration.name, null)).called(once);
+      },
+    );
+
+    test(
       ".handleNewRoutePath() pushes the loading page if the app is not initialized",
       () {
         notifier.handleAppInitialized(isAppInitialized: false);
@@ -1028,4 +1066,7 @@ void main() {
   });
 }
 
-class _PageParametersFactoryMock extends Mock implements PageParametersFactory {}
+class _PageParametersFactoryMock extends Mock implements PageParametersFactory {
+}
+
+class _MetricsPageFactoryMock extends Mock implements MetricsPageFactory {}

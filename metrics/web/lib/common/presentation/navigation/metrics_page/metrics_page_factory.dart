@@ -1,6 +1,7 @@
 // Use of this source code is governed by the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
+import 'package:flutter/material.dart';
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page.dart';
 import 'package:metrics/common/presentation/navigation/models/page_parameters_model.dart';
@@ -21,49 +22,38 @@ class MetricsPageFactory {
     RouteName routeName,
     PageParametersModel pageParameters,
   ) {
+    Widget child = DashboardPage();
+
     switch (routeName) {
       case RouteName.loading:
-        return MetricsPage(
-          child: const LoadingPage(),
-          routeName: routeName,
-          arguments: pageParameters,
-          name: routeName.value,
-        );
+        child = const LoadingPage();
+        break;
       case RouteName.login:
-        return MetricsPage(
-          child: const LoginPage(),
-          routeName: routeName,
-          arguments: pageParameters,
-          name: routeName.value,
-        );
-      case RouteName.dashboard:
-        return MetricsPage(
-          child: DashboardPage(),
-          routeName: routeName,
-          arguments: pageParameters,
-          name: routeName.value,
-        );
+        child = const LoginPage();
+        break;
       case RouteName.projectGroups:
-        return MetricsPage(
-          child: ProjectGroupPage(),
-          routeName: routeName,
-          arguments: pageParameters,
-          name: routeName.value,
-        );
+        child = ProjectGroupPage();
+        break;
       case RouteName.debugMenu:
-        return MetricsPage(
-          child: const DebugMenuPage(),
-          routeName: routeName,
-          arguments: pageParameters,
-          name: routeName.value,
-        );
+        child = const DebugMenuPage();
+        break;
+      default:
+        return _createMetricsPage(child, RouteName.dashboard, pageParameters);
     }
 
+    return _createMetricsPage(child, routeName, pageParameters);
+  }
+
+  /// Creates the [MetricsPage] with the given parameters.
+  MetricsPage _createMetricsPage(
+    Widget child,
+    RouteName routeName,
+    PageParametersModel arguments,
+  ) {
     return MetricsPage(
-      child: DashboardPage(),
-      routeName: RouteName.dashboard,
-      arguments: pageParameters,
-      name: RouteName.dashboard.value,
+      child: child,
+      routeName: routeName,
+      arguments: arguments,
     );
   }
 }

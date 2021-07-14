@@ -85,15 +85,13 @@ void main() {
     test(
       ".createRoute() returns a metrics page with the given route name",
       () {
-        const expectedName = 'test';
         const metricsPage = MetricsPage(
           child: child,
           routeName: routeName,
-          name: expectedName,
         );
         final actualRoute = metricsPage.createRoute(null);
 
-        expect(actualRoute.settings.name, equals(expectedName));
+        expect(actualRoute.settings.name, equals(routeName.value));
       },
     );
 
@@ -140,22 +138,12 @@ void main() {
     );
 
     test(
-      ".copyWith() creates a copy of an instance with the name and arguments replaced with the new values",
+      ".copyWith() creates a copy of an instance with arguments replaced with the new values",
       () {
-        final metricsPage = MetricsPage(
-          name: routeName.value,
-          child: child,
-          routeName: routeName,
-        );
+        const metricsPage = MetricsPage(child: child, routeName: routeName);
 
-        const name = 'test';
+        final updatedPage = metricsPage.copyWith(arguments: arguments);
 
-        final updatedPage = metricsPage.copyWith(
-          name: name,
-          arguments: arguments,
-        );
-
-        expect(updatedPage.name, equals(name));
         expect(updatedPage.arguments, equals(arguments));
       },
     );

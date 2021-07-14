@@ -20,6 +20,9 @@ class MetricsPage<T> extends Page<T> {
   /// A flag that indicates whether this page is a full-screen dialog.
   final bool fullscreenDialog;
 
+  @override
+  String get name => routeName.value;
+
   /// Creates a new instance of the [MetricsPage].
   ///
   /// The [maintainState] defaults to `true`.
@@ -32,13 +35,12 @@ class MetricsPage<T> extends Page<T> {
     this.maintainState = true,
     this.fullscreenDialog = false,
     LocalKey key,
-    String name,
     Object arguments,
   })  : assert(child != null),
         assert(routeName != null),
         assert(maintainState != null),
         assert(fullscreenDialog != null),
-        super(key: key, name: name, arguments: arguments);
+        super(key: key, arguments: arguments);
 
   @override
   Route<T> createRoute(BuildContext context) {
@@ -67,7 +69,6 @@ class MetricsPage<T> extends Page<T> {
   @override
   MetricsPage<T> copyWith({String name, Object arguments}) {
     return MetricsPage(
-      name: name ?? this.name,
       child: child,
       routeName: routeName,
       arguments: arguments ?? this.arguments,
