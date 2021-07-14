@@ -49,12 +49,10 @@ void main() {
       reset(pageParametersFactory);
     });
 
-    final isLoginPageName = equals(DefaultRoutes.login.name.value);
-    final isDashboardPageName = equals(DefaultRoutes.dashboard.name.value);
-    final isProjectGroupsPageName = equals(
-      DefaultRoutes.projectGroups.name.value,
-    );
-    final isLoadingPageName = equals(DefaultRoutes.loading.name.value);
+    final isLoginPageName = equals(DefaultRoutes.login.path);
+    final isDashboardPageName = equals(DefaultRoutes.dashboard.path);
+    final isProjectGroupsPageName = equals(DefaultRoutes.projectGroups.path);
+    final isLoadingPageName = equals(DefaultRoutes.loading.path);
 
     test(
       "throws an AssertionError if the given page factory is null",
@@ -301,15 +299,12 @@ void main() {
     test(
       ".pop() uses the given page parameters factory to create a page parameters",
       () {
-        notifier.handleAuthenticationUpdates(isLoggedIn: true);
-        notifier.push(DefaultRoutes.projectGroups);
-
         final currentConfiguration = notifier.currentConfiguration;
 
+        notifier.push(DefaultRoutes.projectGroups);
         notifier.pop();
 
-        verify(pageParametersFactory.create(currentConfiguration))
-            .called(once);
+        verify(pageParametersFactory.create(currentConfiguration)).called(once);
       },
     );
 
@@ -327,15 +322,17 @@ void main() {
     );
 
     test(
-      ".push() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".push() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
+
         notifier.handleAppInitialized(isAppInitialized: false);
 
-        notifier.push(DefaultRoutes.dashboard);
+        notifier.push(configuration);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(RouteName.loading.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -413,7 +410,7 @@ void main() {
     );
 
     test(
-      ".push() uses the given metrics page factory with correct parameters to create a metrics page",
+      ".push() uses the given metrics page factory to create a metrics page",
       () {
         final pageFactory = _MetricsPageFactoryMock();
         final notifier = NavigationNotifier(
@@ -426,7 +423,7 @@ void main() {
 
         notifier.push(routeConfiguration);
 
-        verify(pageFactory.create(routeConfiguration.name, null)).called(once);
+        verify(pageFactory.create(routeConfiguration, null)).called(once);
       },
     );
 
@@ -444,14 +441,16 @@ void main() {
     );
 
     test(
-      ".pushReplacement() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".pushReplacement() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.pushReplacement(DefaultRoutes.dashboard);
+
+        notifier.pushReplacement(configuration);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(RouteName.loading.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -560,14 +559,16 @@ void main() {
     );
 
     test(
-      ".pushStateReplacement() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".pushStateReplacement() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.pushStateReplacement(DefaultRoutes.dashboard);
+
+        notifier.pushStateReplacement(configuration);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(DefaultRoutes.loading.name.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -696,22 +697,25 @@ void main() {
     );
 
     test(
-      ".pushAndRemoveUntil() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".pushAndRemoveUntil() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(isAppInitialized: false);
-        notifier.pushAndRemoveUntil(DefaultRoutes.dashboard, (page) => true);
+
+        notifier.pushAndRemoveUntil(
+          configuration,
+          (page) => true,
+        );
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(RouteName.loading.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
     test(
       ".pushAndRemoveUntil() removes all underlying routes that don't satisfy the given predicate",
       () {
-        final dashboardRouteName = DefaultRoutes.dashboard.name.value;
-
         notifier.handleAuthenticationUpdates(isLoggedIn: true);
 
         notifier.push(DefaultRoutes.projectGroups);
@@ -720,13 +724,13 @@ void main() {
 
         notifier.pushAndRemoveUntil(
           DefaultRoutes.dashboard,
-          (page) => page.name == dashboardRouteName,
+          (page) => page.name == DefaultRoutes.dashboard.path,
         );
 
         final pages = notifier.pages;
 
         final containsNotDashboard = pages.any(
-          (page) => page.name != dashboardRouteName,
+          (page) => page.name != DefaultRoutes.dashboard.path,
         );
 
         expect(containsNotDashboard, isFalse);
@@ -751,7 +755,7 @@ void main() {
         final pages = notifier.pages;
 
         final containsProjectGroups = pages.any(
-          (page) => page.name == DefaultRoutes.projectGroups.name.value,
+          (page) => page.name == DefaultRoutes.projectGroups.path,
         );
 
         expect(containsProjectGroups, isTrue);
@@ -776,7 +780,7 @@ void main() {
         final pages = notifier.pages;
 
         final containsDashboardPage = pages.any(
-          (page) => page.name == DefaultRoutes.dashboard.name.value,
+          (page) => page.name == DefaultRoutes.dashboard.path,
         );
 
         expect(containsDashboardPage, isTrue);
@@ -864,15 +868,16 @@ void main() {
     );
 
     test(
-      ".handleInitialRoutePath() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".handleInitialRoutePath() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(isAppInitialized: false);
 
-        notifier.handleInitialRoutePath(DefaultRoutes.dashboard);
+        notifier.handleInitialRoutePath(configuration);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(RouteName.loading.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 
@@ -967,7 +972,7 @@ void main() {
 
         notifier.handleInitialRoutePath(routeConfiguration);
 
-        verify(pageFactory.create(routeConfiguration.name, null)).called(once);
+        verify(pageFactory.create(routeConfiguration, null)).called(once);
       },
     );
 
@@ -985,15 +990,16 @@ void main() {
     );
 
     test(
-      ".handleNewRoutePath() pushes the loading page with the given route name value as a name if the app is not initialized",
+      ".handleNewRoutePath() pushes the loading page with the given route path as a name if the app is not initialized",
       () {
+        final configuration = DefaultRoutes.dashboard;
         notifier.handleAppInitialized(isAppInitialized: false);
 
-        notifier.handleNewRoutePath(DefaultRoutes.dashboard);
+        notifier.handleNewRoutePath(configuration);
 
         final currentPage = notifier.pages.last;
 
-        expect(currentPage.name, equals(RouteName.loading.value));
+        expect(currentPage.name, equals(configuration.path));
       },
     );
 

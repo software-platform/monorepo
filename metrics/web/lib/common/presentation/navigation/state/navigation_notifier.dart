@@ -218,7 +218,7 @@ class NavigationNotifier extends ChangeNotifier {
     _updatePageParameters();
 
     final newPage = _pageFactory.create(
-      _currentConfiguration.name,
+      _currentConfiguration,
       _currentPageParameters,
     );
 

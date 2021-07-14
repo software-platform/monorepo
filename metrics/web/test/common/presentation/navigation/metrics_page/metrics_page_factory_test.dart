@@ -3,6 +3,7 @@
 
 import 'package:metrics/auth/presentation/pages/login_page.dart';
 import 'package:metrics/common/presentation/navigation/metrics_page/metrics_page_factory.dart';
+import 'package:metrics/common/presentation/navigation/route_configuration/route_configuration.dart';
 import 'package:metrics/common/presentation/navigation/route_configuration/route_name.dart';
 import 'package:metrics/common/presentation/pages/loading_page.dart';
 import 'package:metrics/dashboard/presentation/models/dashboard_page_parameters_model.dart';
@@ -12,6 +13,7 @@ import 'package:metrics/project_groups/presentation/pages/project_group_page.dar
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../../test_utils/route_configuration_mock.dart';
 import '../../../../test_utils/route_name_mock.dart';
 
 void main() {
@@ -19,20 +21,19 @@ void main() {
     const unknownRouteName = 'unknown';
     const pageParameters = DashboardPageParametersModel();
     const dashboardRouteName = RouteName.dashboard;
-    const loadingRouteName = RouteName.loading;
-    const loginRouteName = RouteName.login;
     const projectGroupsRouteName = RouteName.projectGroups;
-    const debugMenuRouteName = RouteName.debugMenu;
 
     final metricsPageFactory = MetricsPageFactory();
     final routeName = RouteNameMock();
+    final routeConfiguration = RouteConfigurationMock();
 
     tearDown(() {
+      reset(routeConfiguration);
       reset(routeName);
     });
 
     test(
-      ".create() returns the dashboard metrics page if the given route name is null",
+      ".create() returns the metrics page with the dashboard page child if the given route configuration is null",
       () {
         final page = metricsPageFactory.create(null, pageParameters);
 
@@ -41,16 +42,25 @@ void main() {
     );
 
     test(
-      ".create() returns the dashboard metrics page with the name equals to the dashbord route name value if the given route name is null",
+      ".create() returns the metrics page with the name equals to the route configuration dashboard path if the given route configuration is null",
       () {
         final page = metricsPageFactory.create(null, pageParameters);
 
-        expect(page.name, dashboardRouteName.value);
+        expect(page.name, equals(RouteConfiguration.dashboard().path));
       },
     );
 
     test(
-      ".create() returns the dashboard metrics page with arguments equals to the given page parameters if the route name is null",
+      ".create() returns the metrics page with the route name equals to the dashboard route name if the given route configuration is null",
+      () {
+        final page = metricsPageFactory.create(null, pageParameters);
+
+        expect(page.routeName, equals(dashboardRouteName));
+      },
+    );
+
+    test(
+      ".create() returns the metrics page with the arguments equals to the given page parameters if the given route configuration is null",
       () {
         final page = metricsPageFactory.create(null, pageParameters);
 
@@ -59,61 +69,49 @@ void main() {
     );
 
     test(
-      ".create() returns the dashboard metrics page if the given route name is unknown",
+      ".create() returns the metrics page with the dashboard page child if the given route configuration name is unknown",
       () {
+        when(routeConfiguration.name).thenReturn(routeName);
         when(routeName.value).thenReturn(unknownRouteName);
 
-        final page = metricsPageFactory.create(routeName, null);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
         expect(page.child, isA<DashboardPage>());
       },
     );
 
     test(
-      ".create() returns the dashboard metrics page with a name equals to the given route name value if the route name is unknown",
+      ".create() returns the metrics page with a name equals to the route configuration dashboard path if the given route configuration name is unknown",
       () {
+        when(routeConfiguration.name).thenReturn(routeName);
         when(routeName.value).thenReturn(unknownRouteName);
 
-        final page = metricsPageFactory.create(routeName, null);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
-        expect(page.name, equals(dashboardRouteName.value));
+        expect(page.name, equals(RouteConfiguration.dashboard().path));
       },
     );
 
     test(
-      ".create() returns the dashboard metrics page with arguments equals to the given page parameters if the route name is unknown",
+      ".create() returns the metrics page with the route name equals to the dashboard route name if the given route configuration name is unknown",
       () {
+        when(routeConfiguration.name).thenReturn(routeName);
         when(routeName.value).thenReturn(unknownRouteName);
 
-        final page = metricsPageFactory.create(routeName, pageParameters);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
-        expect(page.arguments, equals(pageParameters));
+        expect(page.routeName, equals(dashboardRouteName));
       },
     );
 
     test(
-      ".create() returns the dashboard metrics page if the given route name is a dashboard",
+      ".create() returns the metrics page with the arguments equals to the given page parameters if the given route configuration name is unknown",
       () {
-        final page = metricsPageFactory.create(dashboardRouteName, null);
+        when(routeConfiguration.name).thenReturn(routeName);
+        when(routeName.value).thenReturn(unknownRouteName);
 
-        expect(page.child, isA<DashboardPage>());
-      },
-    );
-
-    test(
-      ".create() returns the dashboard metrics page with a name equals to the given route name value",
-      () {
-        final page = metricsPageFactory.create(dashboardRouteName, null);
-
-        expect(page.name, equals(dashboardRouteName.value));
-      },
-    );
-
-    test(
-      ".create() returns the dashboard metrics page with arguments equals to the given page parameters",
-      () {
         final page = metricsPageFactory.create(
-          dashboardRouteName,
+          routeConfiguration,
           pageParameters,
         );
 
@@ -122,115 +120,91 @@ void main() {
     );
 
     test(
-      ".create() returns the loading metrics page if the given route name is a loading",
+      ".create() returns the metrics page with the dashboard page child if the given route configuration name is a dashboard",
       () {
-        final page = metricsPageFactory.create(loadingRouteName, null);
+        when(routeConfiguration.name).thenReturn(dashboardRouteName);
+
+        final page = metricsPageFactory.create(routeConfiguration, null);
+
+        expect(page.child, isA<DashboardPage>());
+      },
+    );
+
+    test(
+      ".create() returns the metrics page with the loading page child if the given route configuration name is a loading",
+      () {
+        when(routeConfiguration.name).thenReturn(RouteName.loading);
+
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
         expect(page.child, isA<LoadingPage>());
       },
     );
 
     test(
-      ".create() returns the loading metrics page with a name equals to the given route name value",
+      ".create() returns the metrics page with the login page child if the given route configuration name is a login",
       () {
-        final page = metricsPageFactory.create(loadingRouteName, null);
+        when(routeConfiguration.name).thenReturn(RouteName.login);
 
-        expect(page.name, equals(loadingRouteName.value));
-      },
-    );
-
-    test(
-      ".create() returns the loading metrics page with arguments equals to the given page parameters",
-      () {
-        final page = metricsPageFactory.create(
-          loadingRouteName,
-          pageParameters,
-        );
-
-        expect(page.arguments, equals(pageParameters));
-      },
-    );
-
-    test(
-      ".create() returns the login metrics page if the given route name is a login",
-      () {
-        final page = metricsPageFactory.create(loginRouteName, null);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
         expect(page.child, isA<LoginPage>());
       },
     );
 
     test(
-      ".create() returns the login metrics page with a name equals to the given route name value",
+      ".create() returns the metrics page with the project groups page child if the given route configuration name is project groups",
       () {
-        final page = metricsPageFactory.create(loginRouteName, null);
+        when(routeConfiguration.name).thenReturn(projectGroupsRouteName);
 
-        expect(page.name, equals(loginRouteName.value));
-      },
-    );
-
-    test(
-      ".create() returns the login metrics page with arguments equals to the given page parameters",
-      () {
-        final page = metricsPageFactory.create(loginRouteName, pageParameters);
-
-        expect(page.arguments, equals(pageParameters));
-      },
-    );
-
-    test(
-      ".create() returns the project group metrics page if the given route name is project groups",
-      () {
-        final page = metricsPageFactory.create(projectGroupsRouteName, null);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
         expect(page.child, isA<ProjectGroupPage>());
       },
     );
 
     test(
-      ".create() returns the project groups metrics page with a name equals to the given route name value",
+      ".create() returns the metrics page with the debug menu page child if the given route configuration name is a debug menu",
       () {
-        final page = metricsPageFactory.create(projectGroupsRouteName, null);
+        when(routeConfiguration.name).thenReturn(RouteName.debugMenu);
 
-        expect(page.name, equals(projectGroupsRouteName.value));
-      },
-    );
-
-    test(
-      ".create() returns the project groups metrics page with arguments equals to the given page parameters",
-      () {
-        final page = metricsPageFactory.create(
-          projectGroupsRouteName,
-          pageParameters,
-        );
-
-        expect(page.arguments, equals(pageParameters));
-      },
-    );
-
-    test(
-      ".create() returns the debug menu metrics page if the given route name is a debug menu",
-      () {
-        final page = metricsPageFactory.create(debugMenuRouteName, null);
+        final page = metricsPageFactory.create(routeConfiguration, null);
 
         expect(page.child, isA<DebugMenuPage>());
       },
     );
 
     test(
-      ".create() returns the debug menu metrics page with a name equals to the given route name value",
+      ".create() returns the metrics page with the route name equals to the given route configuration route name",
       () {
-        final page = metricsPageFactory.create(debugMenuRouteName, null);
+        when(routeConfiguration.name).thenReturn(projectGroupsRouteName);
 
-        expect(page.name, equals(debugMenuRouteName.value));
+        final page = metricsPageFactory.create(routeConfiguration, null);
+
+        expect(page.routeName, equals(projectGroupsRouteName));
       },
     );
 
     test(
-      ".create() returns the debug menu metrics page with arguments equals to the given page parameters",
+      ".create() returns the metrics page with the name equals to the given route configuration path",
       () {
+        when(routeConfiguration.name).thenReturn(projectGroupsRouteName);
+        when(routeConfiguration.path)
+            .thenReturn(RouteConfiguration.debugMenu().path);
+
+        final page = metricsPageFactory.create(routeConfiguration, null);
+
+        expect(page.name, equals(RouteConfiguration.debugMenu().path));
+      },
+    );
+
+    test(
+      ".create() returns the metrics page with the arguments equals to the given the given page parameters",
+      () {
+        when(routeConfiguration.name).thenReturn(projectGroupsRouteName);
+
         final page = metricsPageFactory.create(
-          debugMenuRouteName,
+          routeConfiguration,
           pageParameters,
         );
 

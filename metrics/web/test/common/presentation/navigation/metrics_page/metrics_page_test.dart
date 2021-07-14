@@ -83,20 +83,7 @@ void main() {
     );
 
     test(
-      ".createRoute() returns a metrics page with the given route name",
-      () {
-        const metricsPage = MetricsPage(
-          child: child,
-          routeName: routeName,
-        );
-        final actualRoute = metricsPage.createRoute(null);
-
-        expect(actualRoute.settings.name, equals(routeName.value));
-      },
-    );
-
-    test(
-      ".createRoute() returns a metrics page with the given arguments",
+      ".createRoute() returns a metrics page route with the given arguments",
       () {
         const metricsPage = MetricsPage(
           child: child,
@@ -106,6 +93,21 @@ void main() {
         final actualRoute = metricsPage.createRoute(null);
 
         expect(actualRoute.settings.arguments, arguments);
+      },
+    );
+
+    test(
+      ".createRoute() returns a metrics page route with the given name",
+      () {
+        const name = 'test';
+        const metricsPage = MetricsPage(
+          child: child,
+          routeName: routeName,
+          name: name,
+        );
+        final actualRoute = metricsPage.createRoute(null);
+
+        expect(actualRoute.settings.name, name);
       },
     );
 
