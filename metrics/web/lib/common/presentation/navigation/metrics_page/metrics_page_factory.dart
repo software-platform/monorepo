@@ -13,7 +13,7 @@ import 'package:metrics/debug_menu/presentation/pages/debug_menu_page.dart';
 import 'package:metrics/project_groups/presentation/pages/project_group_page.dart';
 
 /// A factory that is responsible for creating the [MetricsPage]
-/// depending on the [RouteName].
+/// depending on the [RouteConfiguration].
 class MetricsPageFactory {
   /// Creates the [MetricsPage] using the given [routeConfiguration]
   /// and [pageParameters].

@@ -26,11 +26,8 @@ void main() {
     final metricsPageFactory = MetricsPageFactory();
     final routeName = RouteNameMock();
     final routeConfiguration = RouteConfigurationMock();
-
-    tearDown(() {
-      reset(routeConfiguration);
-      reset(routeName);
-    });
+    final debugMenuPath = RouteConfiguration.debugMenu().path;
+    final dashboardPath = RouteConfiguration.dashboard().path;
 
     test(
       ".create() returns the metrics page with the dashboard page child if the given route configuration is null",
@@ -46,7 +43,7 @@ void main() {
       () {
         final page = metricsPageFactory.create(null, pageParameters);
 
-        expect(page.name, equals(RouteConfiguration.dashboard().path));
+        expect(page.name, equals(dashboardPath));
       },
     );
 
@@ -88,7 +85,7 @@ void main() {
 
         final page = metricsPageFactory.create(routeConfiguration, null);
 
-        expect(page.name, equals(RouteConfiguration.dashboard().path));
+        expect(page.name, equals(dashboardPath));
       },
     );
 
@@ -189,12 +186,11 @@ void main() {
       ".create() returns the metrics page with the name equals to the given route configuration path",
       () {
         when(routeConfiguration.name).thenReturn(projectGroupsRouteName);
-        when(routeConfiguration.path)
-            .thenReturn(RouteConfiguration.debugMenu().path);
+        when(routeConfiguration.path).thenReturn(debugMenuPath);
 
         final page = metricsPageFactory.create(routeConfiguration, null);
 
-        expect(page.name, equals(RouteConfiguration.debugMenu().path));
+        expect(page.name, equals(debugMenuPath));
       },
     );
 

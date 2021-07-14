@@ -136,6 +136,7 @@ void main() {
         expect(metricsPage.child, equals(updatedPage.child));
         expect(metricsPage.arguments, equals(updatedPage.arguments));
         expect(metricsPage.routeName, equals(updatedPage.routeName));
+        expect(metricsPage.name, equals(updatedPage.name));
       },
     );
 
@@ -144,8 +145,13 @@ void main() {
       () {
         const metricsPage = MetricsPage(child: child, routeName: routeName);
 
-        final updatedPage = metricsPage.copyWith(arguments: arguments);
+        const name = 'test';
+        final updatedPage = metricsPage.copyWith(
+          name: name,
+          arguments: arguments,
+        );
 
+        expect(updatedPage.name, equals(name));
         expect(updatedPage.arguments, equals(arguments));
       },
     );
