@@ -24,7 +24,7 @@ class NavigationNotifier extends ChangeNotifier {
   /// from [RouteConfiguration].
   final MetricsPageFactory _pageFactory;
 
-  /// A [PageParametersFactory] used to create a [PageParametersModel] 
+  /// A [PageParametersFactory] used to create a [PageParametersModel]
   /// from the [RouteConfiguration].
   final PageParametersFactory _pageParametersFactory;
 
@@ -215,9 +215,12 @@ class NavigationNotifier extends ChangeNotifier {
 
     _currentConfiguration = newConfiguration;
 
-    final newPage = _pageFactory.create(_currentConfiguration);
-
     _updatePageParameters();
+
+    final newPage = _pageFactory.create(
+      _currentConfiguration,
+      _currentPageParameters,
+    );
 
     _pages.add(newPage);
   }
