@@ -38,7 +38,7 @@ class MetricsPage<T> extends Page<T> {
         assert(routeName != null),
         assert(maintainState != null),
         assert(fullscreenDialog != null),
-        super(key: key, name:name, arguments: arguments);
+        super(key: key, name: name, arguments: arguments);
 
   @override
   Route<T> createRoute(BuildContext context) {
